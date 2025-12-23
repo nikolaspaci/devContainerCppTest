@@ -57,7 +57,10 @@ RUN ARCH=$(uname -m) && \
     rm -rf /tmp/sccache-*
 
 # Utilisateur dev (UID/GID 1000 pour compatibilité)
-RUN groupadd --gid 1000 dev && \
+# Supprimer l'utilisateur ubuntu existant (UID 1000) puis créer dev
+RUN userdel -r ubuntu 2>/dev/null || true && \
+    groupdel ubuntu 2>/dev/null || true && \
+    groupadd --gid 1000 dev && \
     useradd --uid 1000 --gid 1000 -m -s /bin/bash dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
